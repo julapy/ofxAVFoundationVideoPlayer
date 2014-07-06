@@ -3,6 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	video.loadMovie("hands.m4v");
+    video.setLoopState(OF_LOOP_NORMAL);
 	video.play();
 }
 
@@ -18,7 +19,13 @@ void ofApp::update(){
 //--------------------------------------------------------------
 void ofApp::draw(){
 	ofSetColor(255);
-    video.getTexture()->draw(0, 0);
+    
+    ofRectangle screenRect(0, 0, ofGetWidth(), ofGetHeight());
+    ofRectangle videoRect(0, 0, video.getWidth(), video.getHeight());
+    ofRectangle videoFullscreenRect = videoRect;
+    videoFullscreenRect.scaleTo(screenRect, OF_ASPECT_RATIO_KEEP);
+    
+    video.getTexture()->draw(videoFullscreenRect);
 }
 
 //--------------------------------------------------------------
