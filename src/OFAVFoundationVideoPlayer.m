@@ -39,48 +39,16 @@ static NSString * const kCurrentItemKey = @"currentItem";
 @end
 
 //---------------------------------------------------------- video player.
-@implementation OFAVFoundationVideoPlayer {
-    AVPlayer * _player;
-    id timeObserver;
-    int timeObserverFps;
-    
-	CMSampleBufferRef videoSampleBuffer;
-    CMSampleBufferRef audioSampleBuffer;
-    CMTime videoSampleTime;
-    CMTime videoSampleTimePrev;
-    CMTime audioSampleTime;
-    CMTime synchSampleTime;
-	CMTime duration;
-    CMTime currentTime;
-    float volume;
-    float speed;
-    float frameRate;
-
-    NSInteger videoWidth;
-    NSInteger videoHeight;
-    
-    BOOL bWillBeUpdatedExternally;
-    BOOL bReady;
-    BOOL bPlayStateBeforeLoad;
-    BOOL bUpdateFirstFrame;
-    BOOL bNewFrame;
-    BOOL bPlaying;
-    BOOL bFinished;
-    BOOL bAutoPlayOnLoad;
-    BOOL bLoop;
-    BOOL bSeeking;
-    BOOL bSampleVideo;
-    BOOL bSampleAudio;
-}
+@implementation OFAVFoundationVideoPlayer
 
 @synthesize delegate;
-@synthesize playerView;
+@synthesize playerView = _playerView;
 @synthesize player = _player;
-@synthesize playerItem;
-@synthesize asset;
-@synthesize assetReader;
-@synthesize assetReaderVideoTrackOutput;
-@synthesize assetReaderAudioTrackOutput;
+@synthesize playerItem = _playerItem;
+@synthesize asset = _asset;
+@synthesize assetReader = _assetReader;
+@synthesize assetReaderVideoTrackOutput = _assetReaderVideoTrackOutput;
+@synthesize assetReaderAudioTrackOutput = _assetReaderAudioTrackOutput;
 
 static const NSString * ItemStatusContext;
 
@@ -91,8 +59,19 @@ static const NSString * ItemStatusContext;
          *  initialise video player view to full screen by default.
          *  later the view frame can be changed if need be.
          */
-        self.playerView = [[[OFAVFoundationVideoPlayerView alloc] initWithFrame:[UIScreen mainScreen].bounds] autorelease];
+        
+#ifdef TARGET_IOS
+        
+        CGRect playerViewFrame = [UIScreen mainScreen].bounds;
+        self.playerView = [[[OFAVFoundationVideoPlayerView alloc] initWithFrame:playerViewFrame] autorelease];
         self.playerView.backgroundColor = [UIColor blackColor];
+        
+#elif defined(TARGET_OSX)
+        
+        NSRect playerViewFrame = [NSScreen mainScreen].visibleFrame;
+        self.playerView = [[[OFAVFoundationVideoPlayerView alloc] initWithFrame:playerViewFrame] autorelease];
+        
+#endif
         
         self.player = [[[AVPlayer alloc] init] autorelease];
         [(OFAVFoundationVideoPlayerView *)self.playerView setPlayer:_player];
@@ -179,15 +158,37 @@ static const NSString * ItemStatusContext;
 
 //---------------------------------------------------------- position / size.
 - (void)setVideoPosition:(CGPoint)position {
+#ifdef TARGET_IOS
+    
     CGRect playerViewFrame = self.playerView.frame;
     playerViewFrame.origin = position;
     self.playerView.frame = playerViewFrame;
+    
+#elif defined(TARGET_OSX)
+    
+    NSRect playerViewFrame = self.playerView.frame;
+    playerViewFrame.origin.x = position.x;
+    playerViewFrame.origin.y = position.y;
+    self.playerView.frame = playerViewFrame;
+    
+#endif
 }
 
 - (void)setVideoSize:(CGSize)size {
+#ifdef TARGET_IOS
+    
     CGRect playerViewFrame = self.playerView.frame;
     playerViewFrame.size = size;
     self.playerView.frame = playerViewFrame;
+    
+#elif defined(TARGET_OSX)
+    
+    NSRect playerViewFrame = self.playerView.frame;
+    playerViewFrame.size.width = size.width;
+    playerViewFrame.size.height = size.height;
+    self.playerView.frame = playerViewFrame;
+    
+#endif
 }
 
 //---------------------------------------------------------- load / unload.
@@ -244,10 +245,7 @@ static const NSString * ItemStatusContext;
                 
                 NSLog(@"video loaded at %i x %i", videoWidth, videoHeight);
                 
-                CGRect playerViewFrame = self.playerView.frame;
-                playerViewFrame.size.width = videoWidth;
-                playerViewFrame.size.height = videoHeight;
-                self.playerView.frame = playerViewFrame;
+                [self setVideoSize:CGSizeMake(videoWidth, videoHeight)];
                 
                 NSArray * videoTracks = [self.asset tracksWithMediaType:AVMediaTypeVideo];
                 if([videoTracks count] > 0) {
@@ -320,7 +318,10 @@ static const NSString * ItemStatusContext;
     }
     
     //------------------------------------------------------------ add audio output.
-    double preferredHardwareSampleRate = [[AVAudioSession sharedInstance] currentHardwareSampleRate];
+    double preferredHardwareSampleRate = 44100;
+#ifdef TARGET_IOS
+    [[AVAudioSession sharedInstance] currentHardwareSampleRate];
+#endif
     
     AudioChannelLayout channelLayout;
     bzero(&channelLayout, sizeof(channelLayout));
@@ -887,6 +888,7 @@ static const NSString * ItemStatusContext;
     bWillBeUpdatedExternally = value;
 }
 
+#ifdef TARGET_IOS
 //---------------------------------------------------------- uiimage.
 static UIImage * imageFromSampleBuffer(CMSampleBufferRef sampleBuffer) {
     
@@ -933,5 +935,6 @@ static UIImage * imageFromSampleBuffer(CMSampleBufferRef sampleBuffer) {
     
     return image;
 }
+#endif
 
 @end

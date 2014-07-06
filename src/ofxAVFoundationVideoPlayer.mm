@@ -4,16 +4,22 @@
 //  http://julapy.com
 //
 
-#import "ofxAVFoundationVideoPlayer.h"
-#import "OFAVFoundationVideoPlayer.h"
-#import "ofxiOSExtras.h"
-
+//--------------------------------------------------------------
 #ifdef TARGET_OF_IOS
     #ifdef __IPHONE_5_0
         #define IOS_TEXTURE_CACHE
     #endif
 #endif
 
+//--------------------------------------------------------------
+#import "ofxAVFoundationVideoPlayer.h"
+#import "OFAVFoundationVideoPlayer.h"
+
+#ifdef IOS_TEXTURE_CACHE
+    #import "ofxiOSExtras.h"
+#endif
+
+//--------------------------------------------------------------
 #ifdef IOS_TEXTURE_CACHE
 CVOpenGLESTextureCacheRef _videoTextureCache = NULL;
 CVOpenGLESTextureRef _videoTextureRef = NULL;
@@ -39,12 +45,12 @@ ofxAVFoundationVideoPlayer::ofxAVFoundationVideoPlayer() {
     bTextureCacheEnabled = true;
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 ofxAVFoundationVideoPlayer::~ofxAVFoundationVideoPlayer() {
 	close();
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 void ofxAVFoundationVideoPlayer::enableTextureCache() {
     bTextureCacheEnabled = true;
 }
@@ -55,7 +61,7 @@ void ofxAVFoundationVideoPlayer::disableTextureCache() {
     killTextureCache();
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 bool ofxAVFoundationVideoPlayer::loadMovie(string name) {
 	
     if(!videoPlayer) {
@@ -98,7 +104,7 @@ bool ofxAVFoundationVideoPlayer::loadMovie(string name) {
     return true;
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 void ofxAVFoundationVideoPlayer::close() {
 	if(videoPlayer != NULL) {
 		
@@ -131,7 +137,7 @@ void ofxAVFoundationVideoPlayer::close() {
     bUpdateTexture = false;
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 bool ofxAVFoundationVideoPlayer::setPixelFormat(ofPixelFormat _internalPixelFormat) {
 	if(_internalPixelFormat == OF_PIXELS_RGB) {
 		internalPixelFormat = _internalPixelFormat;
@@ -150,12 +156,12 @@ bool ofxAVFoundationVideoPlayer::setPixelFormat(ofPixelFormat _internalPixelForm
 }
 
 
-//---------------------------------------------------------------------------
+//--------------------------------------------------------------
 ofPixelFormat ofxAVFoundationVideoPlayer::getPixelFormat(){
 	return internalPixelFormat;
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 void ofxAVFoundationVideoPlayer::update() {
     
     bFrameNew = false; // default.
@@ -180,7 +186,7 @@ void ofxAVFoundationVideoPlayer::update() {
     }
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 void ofxAVFoundationVideoPlayer::play() {
     if(videoPlayer == NULL) {
         ofLogWarning("ofxAVFoundationVideoPlayer") << "play(): video not loaded";
@@ -189,7 +195,7 @@ void ofxAVFoundationVideoPlayer::play() {
 	[(OFAVFoundationVideoPlayer *)videoPlayer play];
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 void ofxAVFoundationVideoPlayer::stop() {
     if(videoPlayer == NULL) {
         return;
@@ -199,7 +205,7 @@ void ofxAVFoundationVideoPlayer::stop() {
     [(OFAVFoundationVideoPlayer *)videoPlayer setPosition:0];
 }		
 
-//----------------------------------------
+//--------------------------------------------------------------
 bool ofxAVFoundationVideoPlayer::isFrameNew() {
 	if(videoPlayer != NULL) {
 		return bFrameNew;
@@ -207,7 +213,7 @@ bool ofxAVFoundationVideoPlayer::isFrameNew() {
 	return false;
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 unsigned char * ofxAVFoundationVideoPlayer::getPixels() {
     
 	if(isLoaded() == false) {
@@ -342,13 +348,13 @@ void ofxAVFoundationVideoPlayer::updatePixelsToRGB () {
     bUpdatePixelsToRgb = false;
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 ofPixelsRef ofxAVFoundationVideoPlayer::getPixelsRef() {
     static ofPixels dummy;
     return dummy;
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 ofTexture * ofxAVFoundationVideoPlayer::getTexture() {
     
     if(isLoaded() == false) {
@@ -403,7 +409,7 @@ ofTexture * ofxAVFoundationVideoPlayer::getTexture() {
     return &videoTexture;
 }
 
-//---------------------------------------- texture cache
+//-------------------------------------------------------------- texture cache
 void ofxAVFoundationVideoPlayer::initTextureCache() {
 #ifdef IOS_TEXTURE_CACHE
     
@@ -497,7 +503,7 @@ void ofxAVFoundationVideoPlayer::killTextureCache() {
 #endif
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 float ofxAVFoundationVideoPlayer::getWidth() {
     if(videoPlayer == NULL) {
         return 0;
@@ -506,7 +512,7 @@ float ofxAVFoundationVideoPlayer::getWidth() {
     return [((OFAVFoundationVideoPlayer *)videoPlayer) getWidth];
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 float ofxAVFoundationVideoPlayer::getHeight() {
     if(videoPlayer == NULL) {
         return 0;
@@ -515,7 +521,7 @@ float ofxAVFoundationVideoPlayer::getHeight() {
     return [((OFAVFoundationVideoPlayer *)videoPlayer) getHeight];
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 bool ofxAVFoundationVideoPlayer::isPaused() {
     if(videoPlayer == NULL) {
         return false;
@@ -524,7 +530,7 @@ bool ofxAVFoundationVideoPlayer::isPaused() {
     return ![((OFAVFoundationVideoPlayer *)videoPlayer) isPlaying];
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 bool ofxAVFoundationVideoPlayer::isLoaded() {
     if(videoPlayer == NULL) {
         return false;
@@ -533,7 +539,7 @@ bool ofxAVFoundationVideoPlayer::isLoaded() {
     return [((OFAVFoundationVideoPlayer *)videoPlayer) isReady];
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 bool ofxAVFoundationVideoPlayer::isPlaying() {
     if(videoPlayer == NULL) {
         return false;
@@ -542,7 +548,7 @@ bool ofxAVFoundationVideoPlayer::isPlaying() {
     return [((OFAVFoundationVideoPlayer *)videoPlayer) isPlaying];
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 float ofxAVFoundationVideoPlayer::getPosition() {
     if(videoPlayer == NULL) {
         return 0;
@@ -551,7 +557,7 @@ float ofxAVFoundationVideoPlayer::getPosition() {
     return [((OFAVFoundationVideoPlayer *)videoPlayer) getPosition];
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 float ofxAVFoundationVideoPlayer::getSpeed() {
     if(videoPlayer == NULL) {
         return 0;
@@ -560,7 +566,7 @@ float ofxAVFoundationVideoPlayer::getSpeed() {
     return [((OFAVFoundationVideoPlayer *)videoPlayer) getSpeed];
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 float ofxAVFoundationVideoPlayer::getDuration() {
     if(videoPlayer == NULL) {
         return 0;
@@ -569,7 +575,7 @@ float ofxAVFoundationVideoPlayer::getDuration() {
     return [((OFAVFoundationVideoPlayer *)videoPlayer) getDurationInSec];
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 bool ofxAVFoundationVideoPlayer::getIsMovieDone() {
     if(videoPlayer == NULL) {
         return false;
@@ -578,7 +584,7 @@ bool ofxAVFoundationVideoPlayer::getIsMovieDone() {
     return [((OFAVFoundationVideoPlayer *)videoPlayer) isFinished];
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 void ofxAVFoundationVideoPlayer::setPaused(bool bPause) {
     if(videoPlayer == NULL) {
         return;
@@ -591,7 +597,7 @@ void ofxAVFoundationVideoPlayer::setPaused(bool bPause) {
     }
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 void ofxAVFoundationVideoPlayer::setPosition(float pct) {
     if(videoPlayer == NULL) {
         return;
@@ -600,7 +606,7 @@ void ofxAVFoundationVideoPlayer::setPosition(float pct) {
     [((OFAVFoundationVideoPlayer *)videoPlayer) setPosition:pct];
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 void ofxAVFoundationVideoPlayer::setVolume(float volume) {
     if(videoPlayer == NULL) {
         return;
@@ -612,7 +618,7 @@ void ofxAVFoundationVideoPlayer::setVolume(float volume) {
     [((OFAVFoundationVideoPlayer *)videoPlayer) setVolume:volume];
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 void ofxAVFoundationVideoPlayer::setLoopState(ofLoopType state) {
     if(videoPlayer == NULL) {
         return;
@@ -626,7 +632,7 @@ void ofxAVFoundationVideoPlayer::setLoopState(ofLoopType state) {
     [((OFAVFoundationVideoPlayer *)videoPlayer) setLoop:bLoop];
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 void ofxAVFoundationVideoPlayer::setSpeed(float speed) {
     if(videoPlayer == NULL) {
         return;
@@ -635,7 +641,7 @@ void ofxAVFoundationVideoPlayer::setSpeed(float speed) {
     [((OFAVFoundationVideoPlayer *)videoPlayer) setSpeed:speed];
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 void ofxAVFoundationVideoPlayer::setFrame(int frame) {
     if(videoPlayer == NULL) {
         return;
@@ -644,7 +650,7 @@ void ofxAVFoundationVideoPlayer::setFrame(int frame) {
     [((OFAVFoundationVideoPlayer *)videoPlayer) setFrame:frame];
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 int	ofxAVFoundationVideoPlayer::getCurrentFrame() {
     if(videoPlayer == NULL){
         return 0;
@@ -652,7 +658,7 @@ int	ofxAVFoundationVideoPlayer::getCurrentFrame() {
     return [((OFAVFoundationVideoPlayer *)videoPlayer) getCurrentFrameNum];
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 int	ofxAVFoundationVideoPlayer::getTotalNumFrames() {
     if(videoPlayer == NULL){
         return 0;
@@ -660,7 +666,7 @@ int	ofxAVFoundationVideoPlayer::getTotalNumFrames() {
     return [((OFAVFoundationVideoPlayer *)videoPlayer) getDurationInFrames];
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 ofLoopType	ofxAVFoundationVideoPlayer::getLoopState() {
     if(videoPlayer == NULL) {
         return OF_LOOP_NONE;
@@ -673,7 +679,7 @@ ofLoopType	ofxAVFoundationVideoPlayer::getLoopState() {
     return OF_LOOP_NONE;
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 void ofxAVFoundationVideoPlayer::firstFrame() {
     if(videoPlayer == NULL) {
         return;
@@ -682,19 +688,19 @@ void ofxAVFoundationVideoPlayer::firstFrame() {
     [((OFAVFoundationVideoPlayer *)videoPlayer) setPosition:0];
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 void ofxAVFoundationVideoPlayer::nextFrame() {
     int nextFrameNum = ofClamp(getCurrentFrame() + 1, 0, getTotalNumFrames());
     setFrame(nextFrameNum);
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 void ofxAVFoundationVideoPlayer::previousFrame() {
     int prevFrameNum = ofClamp(getCurrentFrame() - 1, 0, getTotalNumFrames());
     setFrame(prevFrameNum);
 }
 
-//----------------------------------------
+//--------------------------------------------------------------
 void * ofxAVFoundationVideoPlayer::getAVFoundationVideoPlayer() {
     return videoPlayer;
 }
