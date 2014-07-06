@@ -6,11 +6,9 @@
 
 #pragma once
 
-#include "ofPixels.h"
 #include "ofBaseTypes.h"
+#include "ofPixels.h"
 #include "ofTexture.h"
-
-#include "ofVideoPlayer.h"
 
 class ofxAVFoundationVideoPlayer : public ofBaseVideoPlayer {
 	

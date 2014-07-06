@@ -8,7 +8,13 @@
 #import "OFAVFoundationVideoPlayer.h"
 #import "ofxiOSExtras.h"
 
-#ifdef __IPHONE_5_0
+#ifdef TARGET_OF_IOS
+    #ifdef __IPHONE_5_0
+        #define IOS_TEXTURE_CACHE
+    #endif
+#endif
+
+#ifdef IOS_TEXTURE_CACHE
 CVOpenGLESTextureCacheRef _videoTextureCache = NULL;
 CVOpenGLESTextureRef _videoTextureRef = NULL;
 #endif
@@ -27,7 +33,7 @@ ofxAVFoundationVideoPlayer::ofxAVFoundationVideoPlayer() {
     bUpdatePixelsToRgb = false;
     bUpdateTexture = false;
     bTextureCacheSupported = false;
-#ifdef __IPHONE_5_0    
+#ifdef IOS_TEXTURE_CACHE
     bTextureCacheSupported = (CVOpenGLESTextureCacheCreate != NULL);
 #endif
     bTextureCacheEnabled = true;
@@ -66,7 +72,7 @@ bool ofxAVFoundationVideoPlayer::loadMovie(string name) {
     bUpdatePixelsToRgb = true;
     bUpdateTexture = true;
     
-#ifdef __IPHONE_5_0
+#ifdef IOS_TEXTURE_CACHE
     if(bTextureCacheSupported == true && bTextureCacheEnabled == true) {
         if(_videoTextureCache == NULL) {
 #ifdef __IPHONE_6_0
@@ -399,7 +405,7 @@ ofTexture * ofxAVFoundationVideoPlayer::getTexture() {
 
 //---------------------------------------- texture cache
 void ofxAVFoundationVideoPlayer::initTextureCache() {
-#ifdef __IPHONE_5_0
+#ifdef IOS_TEXTURE_CACHE
     
     CVImageBufferRef imageBuffer = [(OFAVFoundationVideoPlayer *)videoPlayer getCurrentFrame];
     if(imageBuffer == nil) {
@@ -476,7 +482,7 @@ void ofxAVFoundationVideoPlayer::initTextureCache() {
 }
 
 void ofxAVFoundationVideoPlayer::killTextureCache() {
-#ifdef __IPHONE_5_0
+#ifdef IOS_TEXTURE_CACHE
     
     if(_videoTextureRef) {
         CFRelease(_videoTextureRef);
