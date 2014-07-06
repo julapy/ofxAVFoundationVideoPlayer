@@ -11,6 +11,7 @@
 		67311270196926D0001604B7 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6731126E196926C3001604B7 /* CoreMedia.framework */; };
 		67311286196941F0001604B7 /* OFAVFoundationVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 67311283196941F0001604B7 /* OFAVFoundationVideoPlayer.m */; };
 		67311287196941F0001604B7 /* ofxAVFoundationVideoPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 67311285196941F0001604B7 /* ofxAVFoundationVideoPlayer.mm */; };
+		6731128C19696C3D001604B7 /* OFAVFoundationVideoPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6731128B19696C3D001604B7 /* OFAVFoundationVideoPlayerView.m */; };
 		67C8859018167DD30046C13D /* ofApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 67C8858E18167DD30046C13D /* ofApp.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
@@ -70,6 +71,8 @@
 		67311283196941F0001604B7 /* OFAVFoundationVideoPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OFAVFoundationVideoPlayer.m; sourceTree = "<group>"; };
 		67311284196941F0001604B7 /* ofxAVFoundationVideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAVFoundationVideoPlayer.h; sourceTree = "<group>"; };
 		67311285196941F0001604B7 /* ofxAVFoundationVideoPlayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxAVFoundationVideoPlayer.mm; sourceTree = "<group>"; };
+		6731128A19696C3D001604B7 /* OFAVFoundationVideoPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OFAVFoundationVideoPlayerView.h; sourceTree = "<group>"; };
+		6731128B19696C3D001604B7 /* OFAVFoundationVideoPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OFAVFoundationVideoPlayerView.m; sourceTree = "<group>"; };
 		67C8858E18167DD30046C13D /* ofApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofApp.cpp; sourceTree = "<group>"; };
 		67C8858F18167DD30046C13D /* ofApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofApp.h; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
@@ -142,6 +145,8 @@
 				67311285196941F0001604B7 /* ofxAVFoundationVideoPlayer.mm */,
 				67311282196941F0001604B7 /* OFAVFoundationVideoPlayer.h */,
 				67311283196941F0001604B7 /* OFAVFoundationVideoPlayer.m */,
+				6731128A19696C3D001604B7 /* OFAVFoundationVideoPlayerView.h */,
+				6731128B19696C3D001604B7 /* OFAVFoundationVideoPlayerView.m */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -322,6 +327,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6731128C19696C3D001604B7 /* OFAVFoundationVideoPlayerView.m in Sources */,
 				67311287196941F0001604B7 /* ofxAVFoundationVideoPlayer.mm in Sources */,
 				67C8859018167DD30046C13D /* ofApp.cpp in Sources */,
 				E4B69E200A3A1BDC003C02F2 /* main.cpp in Sources */,

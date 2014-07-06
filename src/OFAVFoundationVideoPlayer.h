@@ -5,39 +5,15 @@
 //
 
 //----------------------------------------------------------
-#include <TargetConditionals.h>
-#if (TARGET_OS_IPHONE_SIMULATOR) || (TARGET_OS_IPHONE) || (TARGET_IPHONE)
-    #define TARGET_IOS
-#else
-    #define TARGET_OSX
-#endif
-
-//----------------------------------------------------------
-#ifdef TARGET_IOS
-    #import <UIKit/UIKit.h>
-    #define PlayerView UIView
-#elif defined(TARGET_OSX)
-    #import <AppKit/AppKit.h>
-    #define PlayerView NSView
-#endif
-
-//----------------------------------------------------------
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
+#import "OFAVFoundationVideoPlayerView.h"
 
 @class AVPlayer;
 @class AVPlayerItem;
 @class AVAsset;
 @class AVAssetReader;
 @class AVAssetReaderOutput;
-
-//---------------------------------------------------------- video player view.
-@interface OFAVFoundationVideoPlayerView : PlayerView {
-    //
-}
-@property (nonatomic, retain) AVPlayer * player;
-
-@end
 
 //---------------------------------------------------------- video player delegate.
 @protocol OFAVFoundationVideoPlayerDelegate <NSObject>
@@ -53,7 +29,7 @@
 
     id<OFAVFoundationVideoPlayerDelegate> delegate;
     
-    PlayerView * _playerView;
+    OFAVFoundationVideoPlayerView * _playerView;
     AVPlayer * _player;
     AVPlayerItem * _playerItem;
     AVAsset * _asset;
@@ -94,7 +70,7 @@
 }
 
 @property (nonatomic, assign) id delegate;
-@property (nonatomic, retain) PlayerView * playerView;
+@property (nonatomic, retain) OFAVFoundationVideoPlayerView * playerView;
 @property (nonatomic, retain) AVPlayer * player;
 @property (nonatomic, retain) AVPlayerItem * playerItem;
 @property (nonatomic, retain) AVAsset * asset;

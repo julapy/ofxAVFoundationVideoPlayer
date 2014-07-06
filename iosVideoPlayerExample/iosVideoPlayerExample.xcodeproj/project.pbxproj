@@ -14,6 +14,7 @@
 		53F323EB10A20EDB00E0DAE4 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 53F323EA10A20EDB00E0DAE4 /* OpenAL.framework */; };
 		67311279196931D1001604B7 /* OFAVFoundationVideoPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 67311276196931D1001604B7 /* OFAVFoundationVideoPlayer.m */; };
 		6731127D196931EF001604B7 /* ofxAVFoundationVideoPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6731127C196931EF001604B7 /* ofxAVFoundationVideoPlayer.mm */; };
+		6731128F19697133001604B7 /* OFAVFoundationVideoPlayerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6731128E19697133001604B7 /* OFAVFoundationVideoPlayerView.m */; };
 		674789BB17D5C6E0008A5C6A /* ofApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 674789BA17D5C6E0008A5C6A /* ofApp.mm */; };
 		678E130817951530005B6D19 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 678E130717951530005B6D19 /* Icon@2x.png */; };
 		678E130A17951536005B6D19 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 678E130917951536005B6D19 /* Icon.png */; };
@@ -65,6 +66,8 @@
 		67311276196931D1001604B7 /* OFAVFoundationVideoPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OFAVFoundationVideoPlayer.m; sourceTree = "<group>"; };
 		6731127B196931EF001604B7 /* ofxAVFoundationVideoPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxAVFoundationVideoPlayer.h; sourceTree = "<group>"; };
 		6731127C196931EF001604B7 /* ofxAVFoundationVideoPlayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofxAVFoundationVideoPlayer.mm; sourceTree = "<group>"; };
+		6731128D19697133001604B7 /* OFAVFoundationVideoPlayerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OFAVFoundationVideoPlayerView.h; sourceTree = "<group>"; };
+		6731128E19697133001604B7 /* OFAVFoundationVideoPlayerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OFAVFoundationVideoPlayerView.m; sourceTree = "<group>"; };
 		674789B917D5C6E0008A5C6A /* ofApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofApp.h; sourceTree = "<group>"; };
 		674789BA17D5C6E0008A5C6A /* ofApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ofApp.mm; sourceTree = "<group>"; };
 		678E130717951530005B6D19 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Icon@2x.png"; path = "bin/data/Icon@2x.png"; sourceTree = "<group>"; };
@@ -175,6 +178,8 @@
 				6731127C196931EF001604B7 /* ofxAVFoundationVideoPlayer.mm */,
 				67311275196931D1001604B7 /* OFAVFoundationVideoPlayer.h */,
 				67311276196931D1001604B7 /* OFAVFoundationVideoPlayer.m */,
+				6731128D19697133001604B7 /* OFAVFoundationVideoPlayerView.h */,
+				6731128E19697133001604B7 /* OFAVFoundationVideoPlayerView.m */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -346,6 +351,7 @@
 				f991f1516cf01f90957071ef /* VideoPlayerControls.m in Sources */,
 				6dbbf854d3d5728a19e20de1 /* VideoPlayerControlsDelegateForOF.mm in Sources */,
 				674789BB17D5C6E0008A5C6A /* ofApp.mm in Sources */,
+				6731128F19697133001604B7 /* OFAVFoundationVideoPlayerView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

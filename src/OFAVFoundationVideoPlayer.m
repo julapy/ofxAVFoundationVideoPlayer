@@ -14,30 +14,6 @@ static NSString * const kStatusKey = @"status";
 static NSString * const kRateKey = @"rate";
 static NSString * const kCurrentItemKey = @"currentItem";
 
-//---------------------------------------------------------- video player view.
-@implementation OFAVFoundationVideoPlayerView
-
-+ (Class)layerClass {
-	return [AVPlayerLayer class];
-}
-
-
-- (AVPlayer*)player {
-	return [(AVPlayerLayer*)[self layer] player];
-}
-
-
-- (void)setPlayer:(AVPlayer*)player {
-	[(AVPlayerLayer*)[self layer] setPlayer:player];
-}
-
-- (void)dealloc {
-    self.player = nil;
-    [super dealloc];
-}
-
-@end
-
 //---------------------------------------------------------- video player.
 @implementation OFAVFoundationVideoPlayer
 
@@ -55,23 +31,8 @@ static const NSString * ItemStatusContext;
 - (id)init {
     self = [super init];
     if(self) {
-        /**
-         *  initialise video player view to full screen by default.
-         *  later the view frame can be changed if need be.
-         */
-        
-#ifdef TARGET_IOS
-        
-        CGRect playerViewFrame = [UIScreen mainScreen].bounds;
-        self.playerView = [[[OFAVFoundationVideoPlayerView alloc] initWithFrame:playerViewFrame] autorelease];
-        self.playerView.backgroundColor = [UIColor blackColor];
-        
-#elif defined(TARGET_OSX)
-        
-        NSRect playerViewFrame = [NSScreen mainScreen].visibleFrame;
-        self.playerView = [[[OFAVFoundationVideoPlayerView alloc] initWithFrame:playerViewFrame] autorelease];
-        
-#endif
+
+        self.playerView = [[[OFAVFoundationVideoPlayerView alloc] initVideoPlayerView] autorelease];
         
         self.player = [[[AVPlayer alloc] init] autorelease];
         [(OFAVFoundationVideoPlayerView *)self.playerView setPlayer:_player];
@@ -158,37 +119,11 @@ static const NSString * ItemStatusContext;
 
 //---------------------------------------------------------- position / size.
 - (void)setVideoPosition:(CGPoint)position {
-#ifdef TARGET_IOS
-    
-    CGRect playerViewFrame = self.playerView.frame;
-    playerViewFrame.origin = position;
-    self.playerView.frame = playerViewFrame;
-    
-#elif defined(TARGET_OSX)
-    
-    NSRect playerViewFrame = self.playerView.frame;
-    playerViewFrame.origin.x = position.x;
-    playerViewFrame.origin.y = position.y;
-    self.playerView.frame = playerViewFrame;
-    
-#endif
+    [self.playerView setVideoPosition:position];
 }
 
 - (void)setVideoSize:(CGSize)size {
-#ifdef TARGET_IOS
-    
-    CGRect playerViewFrame = self.playerView.frame;
-    playerViewFrame.size = size;
-    self.playerView.frame = playerViewFrame;
-    
-#elif defined(TARGET_OSX)
-    
-    NSRect playerViewFrame = self.playerView.frame;
-    playerViewFrame.size.width = size.width;
-    playerViewFrame.size.height = size.height;
-    self.playerView.frame = playerViewFrame;
-    
-#endif
+    [self.playerView setVideoSize:size];
 }
 
 //---------------------------------------------------------- load / unload.
