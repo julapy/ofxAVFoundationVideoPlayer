@@ -1,7 +1,5 @@
 //
-//  AVVideoPlayer.h
-//  iOS+OFLib
-//
+//  OFAVFoundationVideoPlayer.h
 //  Created by lukasz karluk on 21/05/12.
 //
 
@@ -16,7 +14,7 @@
 @class AVAssetReaderOutput;
 
 //---------------------------------------------------------- video player view.
-@interface AVFoundationVideoPlayerView : UIView {
+@interface OFAVFoundationVideoPlayerView : UIView {
     //
 }
 @property (nonatomic, retain) AVPlayer * player;
@@ -24,7 +22,7 @@
 @end
 
 //---------------------------------------------------------- video player delegate.
-@protocol AVFoundationVideoPlayerDelegate <NSObject>
+@protocol OFAVFoundationVideoPlayerDelegate <NSObject>
 @optional
 - (void)playerReady;
 - (void)playerDidProgress;
@@ -33,8 +31,8 @@
 @end
 
 //---------------------------------------------------------- video player.
-@interface AVFoundationVideoPlayer : NSObject {
-    id<AVFoundationVideoPlayerDelegate> delegate;
+@interface OFAVFoundationVideoPlayer : NSObject {
+    id<OFAVFoundationVideoPlayerDelegate> delegate;
 }
 
 @property (nonatomic, assign) id delegate;

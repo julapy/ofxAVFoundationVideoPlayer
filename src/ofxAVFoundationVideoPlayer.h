@@ -6,12 +6,12 @@
 
 #include "ofVideoPlayer.h"
 
-class ofxiOSVideoPlayer : public ofBaseVideoPlayer {
+class ofxAVFoundationVideoPlayer : public ofBaseVideoPlayer {
 	
 public:
 	
-	ofxiOSVideoPlayer();
-	~ofxiOSVideoPlayer();
+	ofxAVFoundationVideoPlayer();
+	~ofxAVFoundationVideoPlayer();
 	   
     void enableTextureCache();
     void disableTextureCache();
@@ -83,6 +83,4 @@ protected:
 	ofPixelFormat internalPixelFormat;
 	ofTexture videoTexture;
 };
-
-#define ofxiPhoneVideoPlayer ofxiOSVideoPlayer
 

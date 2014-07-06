@@ -1,27 +1,20 @@
 //
-//  AVFoundationVideoPlayer.m
-//  iOS+OFLib
-//
+//  OFAVFoundationVideoPlayer.m
 //  Created by lukasz karluk on 21/05/12.
 //
 
-#import "AVFoundationVideoPlayer.h"
+#import "OFAVFoundationVideoPlayer.h"
 
 #define IS_OS_6_OR_LATER    ([[[UIDevice currentDevice] systemVersion] floatValue] >= 6.0)
 
-/* Asset keys */
-NSString * const kTracksKey         = @"tracks";
-NSString * const kPlayableKey		= @"playable";
-
-/* PlayerItem keys */
-NSString * const kStatusKey         = @"status";
-
-/* AVPlayer keys */
-NSString * const kRateKey			= @"rate";
-NSString * const kCurrentItemKey	= @"currentItem";
+static NSString * const kTracksKey = @"tracks";
+static NSString * const kPlayableKey = @"playable";
+static NSString * const kStatusKey = @"status";
+static NSString * const kRateKey = @"rate";
+static NSString * const kCurrentItemKey = @"currentItem";
 
 //---------------------------------------------------------- video player view.
-@implementation AVFoundationVideoPlayerView
+@implementation OFAVFoundationVideoPlayerView
 
 + (Class)layerClass {
 	return [AVPlayerLayer class];
@@ -45,7 +38,7 @@ NSString * const kCurrentItemKey	= @"currentItem";
 @end
 
 //---------------------------------------------------------- video player.
-@implementation AVFoundationVideoPlayer {
+@implementation OFAVFoundationVideoPlayer {
     AVPlayer * _player;
     id timeObserver;
     int timeObserverFps;
@@ -97,11 +90,11 @@ static const NSString * ItemStatusContext;
          *  initialise video player view to full screen by default.
          *  later the view frame can be changed if need be.
          */
-        self.playerView = [[[AVFoundationVideoPlayerView alloc] initWithFrame:[UIScreen mainScreen].bounds] autorelease];
+        self.playerView = [[[OFAVFoundationVideoPlayerView alloc] initWithFrame:[UIScreen mainScreen].bounds] autorelease];
         self.playerView.backgroundColor = [UIColor blackColor];
         
         self.player = [[[AVPlayer alloc] init] autorelease];
-        [(AVFoundationVideoPlayerView *)self.playerView setPlayer:_player];
+        [(OFAVFoundationVideoPlayerView *)self.playerView setPlayer:_player];
         
         [_player addObserver:self 
                   forKeyPath:kRateKey 
@@ -144,7 +137,7 @@ static const NSString * ItemStatusContext;
 
 - (void)dealloc {
     
-    [(AVFoundationVideoPlayerView *)self.playerView setPlayer:nil];
+    [(OFAVFoundationVideoPlayerView *)self.playerView setPlayer:nil];
     [self.playerView removeFromSuperview];
     self.playerView = nil;
     
@@ -894,7 +887,7 @@ static const NSString * ItemStatusContext;
 }
 
 //---------------------------------------------------------- uiimage.
-UIImage * imageFromSampleBuffer(CMSampleBufferRef sampleBuffer) {
+static UIImage * imageFromSampleBuffer(CMSampleBufferRef sampleBuffer) {
     
     CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
     // Lock the base address of the pixel buffer.
