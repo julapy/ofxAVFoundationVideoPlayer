@@ -1,3 +1,9 @@
+//
+//  ofxAVFoundationVideoPlayer.h
+//  Created by lukasz karluk on 06/07/14.
+//  http://julapy.com
+//
+
 #pragma once
 
 #include "ofPixels.h"

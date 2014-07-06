@@ -1,6 +1,7 @@
 //
 //  OFAVFoundationVideoPlayer.h
-//  Created by lukasz karluk on 21/05/12.
+//  Created by lukasz karluk on 06/07/14.
+//  http://julapy.com
 //
 
 #import <UIKit/UIKit.h>

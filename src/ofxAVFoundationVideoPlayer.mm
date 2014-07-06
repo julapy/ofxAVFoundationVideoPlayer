@@ -1,3 +1,9 @@
+//
+//  ofxAVFoundationVideoPlayer.mm
+//  Created by lukasz karluk on 06/07/14.
+//  http://julapy.com
+//
+
 #import "ofxAVFoundationVideoPlayer.h"
 #import "OFAVFoundationVideoPlayer.h"
 #import "ofxiOSExtras.h"
