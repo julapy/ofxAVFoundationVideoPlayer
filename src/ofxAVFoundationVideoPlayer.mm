@@ -6,9 +6,7 @@
 
 //--------------------------------------------------------------
 #ifdef TARGET_OF_IOS
-    #ifdef __IPHONE_5_0
-        #define IOS_TEXTURE_CACHE
-    #endif
+    #define IOS_TEXTURE_CACHE
 #endif
 
 //--------------------------------------------------------------
@@ -157,7 +155,7 @@ bool ofxAVFoundationVideoPlayer::setPixelFormat(ofPixelFormat _internalPixelForm
 
 
 //--------------------------------------------------------------
-ofPixelFormat ofxAVFoundationVideoPlayer::getPixelFormat(){
+ofPixelFormat ofxAVFoundationVideoPlayer::getPixelFormat() const{
 	return internalPixelFormat;
 }
 
@@ -206,7 +204,7 @@ void ofxAVFoundationVideoPlayer::stop() {
 }		
 
 //--------------------------------------------------------------
-bool ofxAVFoundationVideoPlayer::isFrameNew() {
+bool ofxAVFoundationVideoPlayer::isFrameNew() const {
 	if(videoPlayer != NULL) {
 		return bFrameNew;
 	}	
@@ -349,9 +347,12 @@ void ofxAVFoundationVideoPlayer::updatePixelsToRGB () {
 }
 
 //--------------------------------------------------------------
-ofPixelsRef ofxAVFoundationVideoPlayer::getPixelsRef() {
-    static ofPixels dummy;
-    return dummy;
+ofPixelsRef & ofxAVFoundationVideoPlayer::getPixelsRef() {
+    return pixels;
+}
+
+const ofPixels & ofxAVFoundationVideoPlayer::getPixelsRef() const {
+    return pixels;
 }
 
 //--------------------------------------------------------------
@@ -504,7 +505,7 @@ void ofxAVFoundationVideoPlayer::killTextureCache() {
 }
 
 //--------------------------------------------------------------
-float ofxAVFoundationVideoPlayer::getWidth() {
+float ofxAVFoundationVideoPlayer::getWidth() const {
     if(videoPlayer == NULL) {
         return 0;
     }
@@ -513,7 +514,7 @@ float ofxAVFoundationVideoPlayer::getWidth() {
 }
 
 //--------------------------------------------------------------
-float ofxAVFoundationVideoPlayer::getHeight() {
+float ofxAVFoundationVideoPlayer::getHeight() const {
     if(videoPlayer == NULL) {
         return 0;
     }
@@ -522,7 +523,7 @@ float ofxAVFoundationVideoPlayer::getHeight() {
 }
 
 //--------------------------------------------------------------
-bool ofxAVFoundationVideoPlayer::isPaused() {
+bool ofxAVFoundationVideoPlayer::isPaused() const {
     if(videoPlayer == NULL) {
         return false;
     }
@@ -531,7 +532,7 @@ bool ofxAVFoundationVideoPlayer::isPaused() {
 }
 
 //--------------------------------------------------------------
-bool ofxAVFoundationVideoPlayer::isLoaded() {
+bool ofxAVFoundationVideoPlayer::isLoaded() const {
     if(videoPlayer == NULL) {
         return false;
     }
@@ -540,7 +541,7 @@ bool ofxAVFoundationVideoPlayer::isLoaded() {
 }
 
 //--------------------------------------------------------------
-bool ofxAVFoundationVideoPlayer::isPlaying() {
+bool ofxAVFoundationVideoPlayer::isPlaying() const {
     if(videoPlayer == NULL) {
         return false;
     }
@@ -549,7 +550,7 @@ bool ofxAVFoundationVideoPlayer::isPlaying() {
 }
 
 //--------------------------------------------------------------
-float ofxAVFoundationVideoPlayer::getPosition() {
+float ofxAVFoundationVideoPlayer::getPosition() const {
     if(videoPlayer == NULL) {
         return 0;
     }
@@ -558,7 +559,7 @@ float ofxAVFoundationVideoPlayer::getPosition() {
 }
 
 //--------------------------------------------------------------
-float ofxAVFoundationVideoPlayer::getSpeed() {
+float ofxAVFoundationVideoPlayer::getSpeed() const {
     if(videoPlayer == NULL) {
         return 0;
     }
@@ -567,7 +568,7 @@ float ofxAVFoundationVideoPlayer::getSpeed() {
 }
 
 //--------------------------------------------------------------
-float ofxAVFoundationVideoPlayer::getDuration() {
+float ofxAVFoundationVideoPlayer::getDuration() const {
     if(videoPlayer == NULL) {
         return 0;
     }
@@ -576,7 +577,7 @@ float ofxAVFoundationVideoPlayer::getDuration() {
 }
 
 //--------------------------------------------------------------
-bool ofxAVFoundationVideoPlayer::getIsMovieDone() {
+bool ofxAVFoundationVideoPlayer::getIsMovieDone() const {
     if(videoPlayer == NULL) {
         return false;
     }
@@ -651,7 +652,7 @@ void ofxAVFoundationVideoPlayer::setFrame(int frame) {
 }
 
 //--------------------------------------------------------------
-int	ofxAVFoundationVideoPlayer::getCurrentFrame() {
+int	ofxAVFoundationVideoPlayer::getCurrentFrame() const {
     if(videoPlayer == NULL){
         return 0;
     }
@@ -659,7 +660,7 @@ int	ofxAVFoundationVideoPlayer::getCurrentFrame() {
 }
 
 //--------------------------------------------------------------
-int	ofxAVFoundationVideoPlayer::getTotalNumFrames() {
+int	ofxAVFoundationVideoPlayer::getTotalNumFrames() const {
     if(videoPlayer == NULL){
         return 0;
     }
@@ -667,7 +668,7 @@ int	ofxAVFoundationVideoPlayer::getTotalNumFrames() {
 }
 
 //--------------------------------------------------------------
-ofLoopType	ofxAVFoundationVideoPlayer::getLoopState() {
+ofLoopType	ofxAVFoundationVideoPlayer::getLoopState() const {
     if(videoPlayer == NULL) {
         return OF_LOOP_NONE;
     }

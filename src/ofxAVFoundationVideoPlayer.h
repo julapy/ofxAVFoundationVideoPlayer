@@ -24,30 +24,31 @@ public:
     void close();
     void update();
 	
-	bool			setPixelFormat(ofPixelFormat pixelFormat);
-	ofPixelFormat 	getPixelFormat();
+	bool setPixelFormat(ofPixelFormat pixelFormat);
+	ofPixelFormat getPixelFormat() const;
 	
     void play();
     void stop();
 	
-    bool isFrameNew();
+    bool isFrameNew() const;
     unsigned char * getPixels();
-    ofPixelsRef	getPixelsRef();
+    ofPixels & getPixelsRef();
+    const ofPixels & getPixelsRef() const;
     ofTexture *	getTexture();
     void initTextureCache();
     void killTextureCache();
 	
-    float getWidth();
-    float getHeight();
+    float getWidth() const;
+    float getHeight() const;
 	
-    bool isPaused();
-    bool isLoaded();
-    bool isPlaying();
+    bool isPaused() const;
+    bool isLoaded() const;
+    bool isPlaying() const;
 	
-    float getPosition();
-    float getSpeed();
-    float getDuration();
-    bool getIsMovieDone();
+    float getPosition() const;
+    float getSpeed() const;
+    float getDuration() const;
+    bool getIsMovieDone() const;
 	
     void setPaused(bool bPause);
     void setPosition(float pct);
@@ -56,9 +57,9 @@ public:
     void setSpeed(float speed);
     void setFrame(int frame);  // frame 0 = first frame...
 	
-    int	getCurrentFrame();
-    int	getTotalNumFrames();
-    ofLoopType	getLoopState();
+    int	getCurrentFrame() const;
+    int	getTotalNumFrames() const;
+    ofLoopType getLoopState() const;
 	
     void firstFrame();
     void nextFrame();
@@ -70,8 +71,8 @@ protected:
     
     void updatePixelsToRGB();
 	
-	void * videoPlayer; // super hack to forward declare an objective c class inside a header file that can only handle c classes.
-	
+	void * videoPlayer;
+    
     bool bFrameNew;
     bool bResetPixels;
     bool bResetTexture;
@@ -81,6 +82,7 @@ protected:
     bool bTextureCacheSupported;
     bool bTextureCacheEnabled;
 	
+    ofPixels pixels;
 	GLubyte * pixelsRGB;
     GLubyte * pixelsRGBA;
     GLint internalGLFormat;
