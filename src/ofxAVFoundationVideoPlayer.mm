@@ -8,10 +8,6 @@
 #import "ofxAVFoundationVideoPlayer.h"
 #import "OFAVFoundationVideoPlayer.h"
 
-#ifdef TARGET_OF_IOS
-    #import "ofxiOSExtras.h"
-#endif
-
 //--------------------------------------------------------------
 #ifdef TARGET_OF_IOS
 CVOpenGLESTextureCacheRef _videoTextureCache = NULL;
@@ -91,7 +87,7 @@ bool ofxAVFoundationVideoPlayer::loadMovie(string name) {
 #if defined(TARGET_OF_IOS) && defined(__IPHONE_6_0)
         err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault,
                                            NULL,
-                                           ofxiOSGetGLView().context,
+                                           [EAGLContext currentContext],
                                            NULL,
                                            &_videoTextureCache);
 #endif
@@ -99,7 +95,7 @@ bool ofxAVFoundationVideoPlayer::loadMovie(string name) {
 #if defined(TARGET_OF_IOS) && !defined(__IPHONE_6_0)
         err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault,
                                            NULL,
-                                           (__bridge void *)ofxiOSGetGLView().context,
+                                           (__bridge void *)[EAGLContext currentContext],
                                            NULL,
                                            &_videoTextureCache);
 #endif
