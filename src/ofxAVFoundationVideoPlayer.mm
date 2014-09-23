@@ -5,22 +5,22 @@
 //
 
 //--------------------------------------------------------------
-#ifdef TARGET_OF_IOS
-    #define IOS_TEXTURE_CACHE
-#endif
-
-//--------------------------------------------------------------
 #import "ofxAVFoundationVideoPlayer.h"
 #import "OFAVFoundationVideoPlayer.h"
 
-#ifdef IOS_TEXTURE_CACHE
+#ifdef TARGET_OF_IOS
     #import "ofxiOSExtras.h"
 #endif
 
 //--------------------------------------------------------------
-#ifdef IOS_TEXTURE_CACHE
+#ifdef TARGET_OF_IOS
 CVOpenGLESTextureCacheRef _videoTextureCache = NULL;
 CVOpenGLESTextureRef _videoTextureRef = NULL;
+#endif
+
+#ifdef TARGET_OSX
+CVOpenGLTextureCacheRef _videoTextureCache = NULL;
+CVOpenGLTextureRef _videoTextureRef = NULL;
 #endif
 
 ofxAVFoundationVideoPlayer::ofxAVFoundationVideoPlayer() {
@@ -37,8 +37,11 @@ ofxAVFoundationVideoPlayer::ofxAVFoundationVideoPlayer() {
     bUpdatePixelsToRgb = false;
     bUpdateTexture = false;
     bTextureCacheSupported = false;
-#ifdef IOS_TEXTURE_CACHE
+#ifdef TARGET_OF_IOS
     bTextureCacheSupported = (CVOpenGLESTextureCacheCreate != NULL);
+#endif
+#ifdef TARGET_OSX
+    bTextureCacheSupported = (CVOpenGLTextureCacheCreate != NULL);
 #endif
     bTextureCacheEnabled = true;
 }
@@ -76,28 +79,44 @@ bool ofxAVFoundationVideoPlayer::loadMovie(string name) {
     bUpdatePixelsToRgb = true;
     bUpdateTexture = true;
     
-#ifdef IOS_TEXTURE_CACHE
-    if(bTextureCacheSupported == true && bTextureCacheEnabled == true) {
-        if(_videoTextureCache == NULL) {
-#ifdef __IPHONE_6_0
-            CVReturn err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault,
-                                                        NULL,
-                                                        ofxiOSGetGLView().context,
-                                                        NULL,
-                                                        &_videoTextureCache);
-#else
-            CVReturn err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault,
-                                                        NULL,
-                                                        (__bridge void *)ofxiOSGetGLView().context,
-                                                        NULL,
-                                                        &_videoTextureCache);
+    bool bCreateTextureCache = true;
+    bCreateTextureCache = bCreateTextureCache && (bTextureCacheSupported == true);
+    bCreateTextureCache = bCreateTextureCache && (bTextureCacheEnabled == true);
+    bCreateTextureCache = bCreateTextureCache && (_videoTextureCache == NULL);
+    
+    if(bCreateTextureCache == true) {
+
+        CVReturn err;
+        
+#if defined(TARGET_OF_IOS) && defined(__IPHONE_6_0)
+        err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault,
+                                           NULL,
+                                           ofxiOSGetGLView().context,
+                                           NULL,
+                                           &_videoTextureCache);
 #endif
-            if(err) {
-                NSLog(@"Error at CVOpenGLESTextureCacheCreate %d", err);
-            }    
+        
+#if defined(TARGET_OF_IOS) && !defined(__IPHONE_6_0)
+        err = CVOpenGLESTextureCacheCreate(kCFAllocatorDefault,
+                                           NULL,
+                                           (__bridge void *)ofxiOSGetGLView().context,
+                                           NULL,
+                                           &_videoTextureCache);
+#endif
+        
+#ifdef TARGET_OSX
+        err = CVOpenGLTextureCacheCreate(kCFAllocatorDefault,
+                                         NULL,
+                                         CGLGetCurrentContext(),
+                                         CGLGetPixelFormat(CGLGetCurrentContext()),
+                                         NULL,
+                                         &_videoTextureCache);
+#endif
+        
+        if(err) {
+            NSLog(@"Error at CVOpenGLESTextureCacheCreate %d", err);
         }
     }
-#endif
     
     return true;
 }
@@ -412,8 +431,7 @@ ofTexture * ofxAVFoundationVideoPlayer::getTexture() {
 
 //-------------------------------------------------------------- texture cache
 void ofxAVFoundationVideoPlayer::initTextureCache() {
-#ifdef IOS_TEXTURE_CACHE
-    
+
     CVImageBufferRef imageBuffer = [(OFAVFoundationVideoPlayer *)videoPlayer getCurrentFrame];
     if(imageBuffer == nil) {
         return;
@@ -443,13 +461,17 @@ void ofxAVFoundationVideoPlayer::initTextureCache() {
     ofTextureData & texData = videoTexture.getTextureData();
     texData.tex_t = 1.0f; // these values need to be reset to 1.0 to work properly.
     texData.tex_u = 1.0f; // assuming this is something to do with the way ios creates the texture cache.
+
+    CVReturn err;
+    unsigned int textureCacheID;
+    
+#ifdef TARGET_OF_IOS
     
     /**
      *  create video texture from video image.
      *  inside this function, ios is creating the texture for us.
      *  a video texture reference is returned.
      */
-    CVReturn err;
     err = CVOpenGLESTextureCacheCreateTextureFromImage(kCFAllocatorDefault,     // CFAllocatorRef allocator
                                                        _videoTextureCache,      // CVOpenGLESTextureCacheRef textureCache
                                                        imageBuffer,             // CVImageBufferRef sourceImage
@@ -463,11 +485,26 @@ void ofxAVFoundationVideoPlayer::initTextureCache() {
                                                        0,                       // size_t planeIndex
                                                        &_videoTextureRef);      // CVOpenGLESTextureRef *textureOut
     
-    unsigned int textureCacheID = CVOpenGLESTextureGetName(_videoTextureRef);
+    textureCacheID = CVOpenGLESTextureGetName(_videoTextureRef);
+    
+#endif
+    
+#ifdef TARGET_OSX
+    
+    err = CVOpenGLTextureCacheCreateTextureFromImage(NULL,
+                                                     _videoTextureCache,
+                                                     imageBuffer,
+                                                     NULL,
+                                                     &_videoTextureRef);
+
+    textureCacheID = CVOpenGLTextureGetName(_videoTextureRef);
+    
+#endif
+    
     videoTexture.setUseExternalTextureID(textureCacheID);
     videoTexture.setTextureMinMagFilter(GL_LINEAR, GL_LINEAR);
     videoTexture.setTextureWrap(GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE);
-    if(!ofIsGLProgrammableRenderer()) {
+    if(ofIsGLProgrammableRenderer() == false) {
         videoTexture.bind();
         glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
         videoTexture.unbind();
@@ -479,6 +516,8 @@ void ofxAVFoundationVideoPlayer::initTextureCache() {
     
     CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
     
+#ifdef TARGET_OF_IOS
+    
     CVOpenGLESTextureCacheFlush(_videoTextureCache, 0);
     if(_videoTextureRef) {
         CFRelease(_videoTextureRef);
@@ -486,10 +525,20 @@ void ofxAVFoundationVideoPlayer::initTextureCache() {
     }
     
 #endif
+    
+#ifdef TARGET_OSX
+
+    CVOpenGLTextureCacheFlush(_videoTextureCache, 0);
+    if(_videoTextureRef) {
+        CVOpenGLTextureRelease(_videoTextureRef);
+        _videoTextureRef = NULL;
+    }
+    
+#endif
 }
 
 void ofxAVFoundationVideoPlayer::killTextureCache() {
-#ifdef IOS_TEXTURE_CACHE
+#ifdef TARGET_OF_IOS
     
     if(_videoTextureRef) {
         CFRelease(_videoTextureRef);
@@ -498,6 +547,20 @@ void ofxAVFoundationVideoPlayer::killTextureCache() {
 
     if(_videoTextureCache) {
         CFRelease(_videoTextureCache);
+        _videoTextureCache = NULL;
+    }
+    
+#endif
+    
+#ifdef TARGET_OSX
+    
+    if (_videoTextureRef != NULL) {
+        CVOpenGLTextureRelease(_videoTextureRef);
+        _videoTextureRef = NULL;
+    }
+    
+    if(_videoTextureCache != NULL) {
+        CVOpenGLTextureCacheRelease(_videoTextureCache);
         _videoTextureCache = NULL;
     }
     
