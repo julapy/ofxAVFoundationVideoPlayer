@@ -7,6 +7,7 @@
 //----------------------------------------------------------
 #import <Foundation/Foundation.h>
 #import <AVFoundation/AVFoundation.h>
+#import <Accelerate/Accelerate.h>
 #import "OFAVFoundationVideoPlayerView.h"
 
 @class AVPlayer;

@@ -20,7 +20,7 @@ public:
     void enableTextureCache();
     void disableTextureCache();
     
-    bool loadMovie(string name);
+    bool load(string name);
     void close();
     void update();
 	
@@ -31,10 +31,9 @@ public:
     void stop();
 	
     bool isFrameNew() const;
-    unsigned char * getPixels();
-    ofPixels & getPixelsRef();
-    const ofPixels & getPixelsRef() const;
-    ofTexture *	getTexture();
+    const ofPixels & getPixels() const;
+    ofPixels & getPixels();
+    ofTexture * getTexturePtr();
     void initTextureCache();
     void killTextureCache();
 	
@@ -67,26 +66,24 @@ public:
     
 	void * getAVFoundationVideoPlayer();
     
+    OF_DEPRECATED_MSG("ofxiOSVideoPlayer::loadMovie() is deprecated, use load() instead.", bool loadMovie(string name));
+    OF_DEPRECATED_MSG("ofxiOSVideoPlayer::getPixelsRef() is deprecated, use getPixels() instead.", ofPixels & getPixelsRef());
+    OF_DEPRECATED_MSG("ofxiOSVideoPlayer::getPixelsRef() is deprecated, use getPixels() instead.", const ofPixels & getPixelsRef() const);
+    OF_DEPRECATED_MSG("ofxiOSVideoPlayer::getTexture() is deprecated, use getTexturePtr() instead.", ofTexture * getTexture());
+    
 protected:
     
-    void updatePixelsToRGB();
-	
 	void * videoPlayer;
     
     bool bFrameNew;
     bool bResetPixels;
-    bool bResetTexture;
     bool bUpdatePixels;
-    bool bUpdatePixelsToRgb;
     bool bUpdateTexture;
     bool bTextureCacheSupported;
     bool bTextureCacheEnabled;
 	
     ofPixels pixels;
-	GLubyte * pixelsRGB;
-    GLubyte * pixelsRGBA;
-    GLint internalGLFormat;
-	ofPixelFormat internalPixelFormat;
+	ofPixelFormat pixelFormat;
 	ofTexture videoTexture;
 };
 

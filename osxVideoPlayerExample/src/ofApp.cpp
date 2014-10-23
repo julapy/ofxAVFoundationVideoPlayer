@@ -4,7 +4,7 @@ static int const kProgressBarHeight = 30;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	video.loadMovie("hands.m4v");
+	video.load("hands.m4v");
     video.setLoopState(OF_LOOP_NORMAL);
 	video.play();
 }
@@ -31,7 +31,7 @@ void ofApp::draw(){
     ofRectangle videoFullscreenRect = videoRect;
     videoFullscreenRect.scaleTo(screenRect, OF_ASPECT_RATIO_KEEP_BY_EXPANDING);
     
-    video.getTexture()->draw(videoFullscreenRect);
+    video.getTexturePtr()->draw(videoFullscreenRect);
     
     //---------------------------------------------------------- draw progress bar.
     float progress = video.getPosition();
@@ -41,12 +41,12 @@ void ofApp::draw(){
     progressRect.y = ofGetHeight() - progressRect.height;
     
     ofSetColor(blackColor);
-    ofRect(progressRect);
+    ofDrawRectangle(progressRect);
     
     progressRect.width = ofMap(progress, 0.0, 1.0, 0.0, ofGetWidth());
     
     ofSetColor(yelloColor);
-    ofRect(progressRect);
+    ofDrawRectangle(progressRect);
     ofSetColor(255);
     
     //---------------------------------------------------------- draw info.
