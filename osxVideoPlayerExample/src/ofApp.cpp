@@ -31,7 +31,7 @@ void ofApp::draw(){
     ofRectangle videoFullscreenRect = videoRect;
     videoFullscreenRect.scaleTo(screenRect, OF_ASPECT_RATIO_KEEP_BY_EXPANDING);
     
-    video.getTexturePtr()->draw(videoFullscreenRect);
+    video.draw(videoFullscreenRect);
     
     //---------------------------------------------------------- draw progress bar.
     float progress = video.getPosition();

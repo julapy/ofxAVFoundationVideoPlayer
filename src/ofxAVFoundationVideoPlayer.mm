@@ -183,6 +183,23 @@ void ofxAVFoundationVideoPlayer::update() {
 }
 
 //--------------------------------------------------------------
+void ofxAVFoundationVideoPlayer::draw() {
+    draw(0, 0);
+}
+
+void ofxAVFoundationVideoPlayer::draw(float x, float y) {
+    draw(x, y, getWidth(), getHeight());
+}
+
+void ofxAVFoundationVideoPlayer::draw(const ofRectangle & rect) {
+    draw(rect.x, rect.y, rect.width, rect.height);
+}
+
+void ofxAVFoundationVideoPlayer::draw(float x, float y, float w, float h) {
+    getTexturePtr()->draw(x, y, w, h);
+}
+
+//--------------------------------------------------------------
 void ofxAVFoundationVideoPlayer::play() {
     if(videoPlayer == NULL) {
         ofLogWarning("ofxiOSVideoPlayer") << "play(): video not loaded";

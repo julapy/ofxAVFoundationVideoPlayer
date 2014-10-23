@@ -55,7 +55,7 @@ void ofApp::update(){
 void ofApp::draw(){
 	
 	ofSetColor(255);
-    video.getTexturePtr()->draw(0, 0);
+    video.draw(0, 0);
     
 	if(video.isLoaded()){
         

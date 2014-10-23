@@ -23,7 +23,12 @@ public:
     bool load(string name);
     void close();
     void update();
-	
+
+    void draw();
+    void draw(float x, float y);
+    void draw(const ofRectangle & rect);
+    void draw(float x, float y, float w, float h);
+    
 	bool setPixelFormat(ofPixelFormat pixelFormat);
 	ofPixelFormat getPixelFormat() const;
 	
