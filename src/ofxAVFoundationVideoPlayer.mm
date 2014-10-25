@@ -228,7 +228,7 @@ bool ofxAVFoundationVideoPlayer::isFrameNew() const {
 
 //--------------------------------------------------------------
 const ofPixels & ofxAVFoundationVideoPlayer::getPixels() const {
-    return getPixels();
+    return pixels;
 }
 
 ofPixels & ofxAVFoundationVideoPlayer::getPixels() {
