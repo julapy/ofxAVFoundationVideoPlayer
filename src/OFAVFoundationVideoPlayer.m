@@ -232,8 +232,13 @@ static const NSString * ItemStatusContext;
     
     //------------------------------------------------------------ add video output.
     NSMutableDictionary * videoOutputSettings = [[[NSMutableDictionary alloc] init] autorelease];
+#ifdef TARGET_IOS
     [videoOutputSettings setObject:[NSNumber numberWithInt:kCVPixelFormatType_32BGRA]
                             forKey:(NSString*)kCVPixelBufferPixelFormatTypeKey];
+#elif defined(TARGET_OSX)
+    [videoOutputSettings setObject:[NSNumber numberWithInt:kCVPixelFormatType_32ARGB]
+                            forKey:(NSString*)kCVPixelBufferPixelFormatTypeKey];
+#endif
     
     NSArray * videoTracks = [self.asset tracksWithMediaType:AVMediaTypeVideo];
     if([videoTracks count] > 0) {
