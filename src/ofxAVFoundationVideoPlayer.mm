@@ -357,7 +357,7 @@ void ofxAVFoundationVideoPlayer::initTextureCache() {
         return;
     }
     
-    CVPixelBufferLockBaseAddress(imageBuffer, 0);
+    CVPixelBufferLockBaseAddress(imageBuffer, kCVPixelBufferLock_ReadOnly);
     
     /**
      *  video texture cache is available.
@@ -434,7 +434,7 @@ void ofxAVFoundationVideoPlayer::initTextureCache() {
         ofLogError("ofxiOSVideoPlayer") << "initTextureCache(): error creating texture cache from image " << err;
     }
     
-    CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
+    CVPixelBufferUnlockBaseAddress(imageBuffer, kCVPixelBufferLock_ReadOnly);
     
 #ifdef TARGET_OF_IOS
     

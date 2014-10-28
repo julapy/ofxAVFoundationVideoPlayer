@@ -145,7 +145,8 @@ static const NSString * ItemStatusContext;
     [self unloadVideo];     // unload video if one is already loaded.
     
     self.asset = [AVURLAsset URLAssetWithURL:url options:nil];
-    if(!self.asset) {
+    if(self.asset == nil) {
+        NSLog(@"error loading asset: %@", [url description]);
         return NO;
     }
     
@@ -155,61 +156,61 @@ static const NSString * ItemStatusContext;
             NSError * error = nil;
             AVKeyValueStatus status = [self.asset statusOfValueForKey:kTracksKey error:&error];
             
-            if(status == AVKeyValueStatusLoaded) {
-                
-                duration = [self.asset duration];
-                if(CMTimeCompare(duration, kCMTimeZero) == 0) {
-                    return; // duration is zero.
-                }
-                
-                if(!isfinite([self getDurationInSec])) {
-                    return; // duration is infinite.
-                }
-                
-                BOOL bOk = [self createAssetReaderWithTimeRange:CMTimeRangeMake(kCMTimeZero, duration)];
-                if(!bOk) {
-                    return; // asset reader not created.
-                }
-                
-                videoSampleBuffer = [self.assetReaderVideoTrackOutput copyNextSampleBuffer];
-                CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(videoSampleBuffer);
-                CVPixelBufferLockBaseAddress(imageBuffer,0);
-                videoWidth = CVPixelBufferGetWidth(imageBuffer);
-                videoHeight = CVPixelBufferGetHeight(imageBuffer);
-                CVPixelBufferUnlockBaseAddress(imageBuffer,0);
-                
-                NSLog(@"video loaded at %i x %i", videoWidth, videoHeight);
-                
-                [self setVideoSize:CGSizeMake(videoWidth, videoHeight)];
-                
-                NSArray * videoTracks = [self.asset tracksWithMediaType:AVMediaTypeVideo];
-                if([videoTracks count] > 0) {
-                    AVAssetTrack * track = [videoTracks objectAtIndex:0];
-                    frameRate = track.nominalFrameRate;
-                }
-                
-                //------------------------------------------------------------ create player item.
-                self.playerItem = [AVPlayerItem playerItemWithAsset:self.asset];
-                
-                [self.playerItem addObserver:self 
-                                  forKeyPath:kStatusKey
-                                     options:0 
-                                     context:&ItemStatusContext];
-                
-                NSNotificationCenter * notificationCenter = [NSNotificationCenter defaultCenter];
-                [notificationCenter addObserver:self
-                                       selector:@selector(playerItemDidReachEnd)
-                                           name:AVPlayerItemDidPlayToEndTimeNotification
-                                         object:self.playerItem];
-                
-                [_player replaceCurrentItemWithPlayerItem:self.playerItem];
-                
-                [self addTimeObserverToPlayer];
-            }
-            else {
-                NSLog(@"The asset's tracks were not loaded:\n%@", [error localizedDescription]);
+            if(status != AVKeyValueStatusLoaded) {
+                NSLog(@"error loading asset tracks: %@", [error localizedDescription]);
                 return;
             }
+            
+            duration = [self.asset duration];
+            
+            if(CMTimeCompare(duration, kCMTimeZero) == 0) {
+                NSLog(@"track loaded with zero duration.");
+                return;
+            }
+            
+            if(isfinite([self getDurationInSec]) == NO) {
+                NSLog(@"track loaded with infinite duration.");
+                return;
+            }
+            
+            BOOL bOk = [self createAssetReaderWithTimeRange:CMTimeRangeMake(kCMTimeZero, duration)];
+            if(bOk == NO) {
+                NSLog(@"problem with creating asset reader.");
+                return;
+            }
+            
+            NSArray * videoTracks = [self.asset tracksWithMediaType:AVMediaTypeVideo];
+            if([videoTracks count] == 0) {
+                NSLog(@"no video tracks found.");
+                return;
+            }
+            
+            AVAssetTrack * track = [videoTracks objectAtIndex:0];
+            frameRate = track.nominalFrameRate;
+            videoWidth = [track naturalSize].width;
+            videoHeight = [track naturalSize].height;
+            
+            NSLog(@"video loaded at %i x %i", videoWidth, videoHeight);
+            
+            [self setVideoSize:CGSizeMake(videoWidth, videoHeight)];
+            
+            //------------------------------------------------------------ create player item.
+            self.playerItem = [AVPlayerItem playerItemWithAsset:self.asset];
+            
+            [self.playerItem addObserver:self
+                              forKeyPath:kStatusKey
+                                 options:0
+                                 context:&ItemStatusContext];
+            
+            NSNotificationCenter * notificationCenter = [NSNotificationCenter defaultCenter];
+            [notificationCenter addObserver:self
+                                   selector:@selector(playerItemDidReachEnd)
+                                       name:AVPlayerItemDidPlayToEndTimeNotification
+                                     object:self.playerItem];
+            
+            [_player replaceCurrentItemWithPlayerItem:self.playerItem];
+            
+            [self addTimeObserverToPlayer];
         });
     }];
     
@@ -834,7 +835,7 @@ static UIImage * imageFromSampleBuffer(CMSampleBufferRef sampleBuffer) {
     
     CVImageBufferRef imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
     // Lock the base address of the pixel buffer.
-    CVPixelBufferLockBaseAddress(imageBuffer,0);
+    CVPixelBufferLockBaseAddress(imageBuffer, kCVPixelBufferLock_ReadOnly);
     
     // Get the number of bytes per row for the pixel buffer.
     size_t bytesPerRow = CVPixelBufferGetBytesPerRow(imageBuffer);
@@ -871,7 +872,7 @@ static UIImage * imageFromSampleBuffer(CMSampleBufferRef sampleBuffer) {
     UIImage *image = [UIImage imageWithCGImage:cgImage];
     CGImageRelease(cgImage);
     
-    CVPixelBufferUnlockBaseAddress(imageBuffer, 0);
+    CVPixelBufferUnlockBaseAddress(imageBuffer, kCVPixelBufferLock_ReadOnly);
     
     return image;
 }
